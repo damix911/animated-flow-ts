@@ -32,9 +32,18 @@ const shimmerLayer = new ShimmerLayer({
   }
 } as any);
 
+(window as any)["lastReload"] = 0;
+
+setInterval(() => {
+  (document.getElementById("divReload") as any).style.opacity = Math.exp(-3 * (performance.now() - (window as any)["lastReload"]) / 1000);
+}, 20);
+
+console.log(fancyRasterLayer, shimmerLayer, testPatternLayer);
+
 const map = new EsriMap({
   basemap: "dark-gray",
-  layers: [fancyRasterLayer, shimmerLayer, testPatternLayer]
+  // layers: [fancyRasterLayer, shimmerLayer, testPatternLayer]
+  layers: [fancyRasterLayer]
 });
 
 const view = new MapView({
@@ -44,10 +53,16 @@ const view = new MapView({
   center: [-110, 40]
 });
 
-const layerList = new LayerList({
-  view
-});
+view.ui.add("divTranslation", "top-right");
+view.ui.add("divScale", "top-right");
+view.ui.add("divReload", "top-right");
 
-view.ui.add(layerList, {
-  position: "bottom-right"
-});
+console.log(LayerList);
+
+// const layerList = new LayerList({
+//   view
+// });
+
+// view.ui.add(layerList, {
+//   position: "bottom-right"
+// });

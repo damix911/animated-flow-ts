@@ -208,6 +208,8 @@ export abstract class VisualizationLayerView2D<GR extends Resources, LR extends 
     this.visualizationStyle
       .loadLocalResources(expandedExtent, size, pixelRatio, abortController.signal)
       .then((resources) => {
+        (window as any)["lastReload"] = performance.now();
+
         // Once loaded, store the loaded resource object in the local resource entry.
         entry.state = { name: "loaded", resources };
       });
@@ -286,6 +288,9 @@ export abstract class VisualizationLayerView2D<GR extends Resources, LR extends 
       renderParams.state.toScreen(translation, xMap, yMap);
       translation[0] /= devicePixelRatio;
       translation[1] /= devicePixelRatio;
+
+      (document.getElementById("divTranslation") as any).innerText = `translation: [${translation[0]}, ${translation[1]}]`;
+      (document.getElementById("divScale") as any).innerText = `scale: ${mostRecentRenderableLocalResources.resolution / renderParams.state.resolution}`;
 
       const visualizationRenderParams: VisualizationRenderParams = {
         size: renderParams.state.size,
